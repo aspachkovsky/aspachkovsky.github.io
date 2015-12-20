@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<head>
+<script src="jquery-1.11.3.js"></script>
+<script src="moment-with-locales.js"></script>
+<script src="moment-weekday-calc.js"></script>
+<link rel="stylesheet" href="jquery-ui.css">
+<script src="jquery-ui.js"></script>
+
+<script >
+
+
+
+$(function(){
+    
+    $('.dateInput').datepicker({
+        dateFormat: 'dd-mm-yy',
+	firstDay: 1
+    }).on('change', function(event){
+    	var startDateValue = $('#startDate').val();
+        var endDateValue = $('#endDate').val();
+
+	$('#days').html("");
+	$('#workingDays').html("");
+
+	if (startDateValue && endDateValue) {
+
+		var startDate = moment(startDateValue, "DD-MM-YYYY");
+		var endDate = moment(endDateValue, "DD-MM-YYYY");
+
+		if (endDate < startDate) {
+			$('#days').html("Wrong interval captured");
+			$('#workingDays').html("Wrong interval captured");
+		}
+				
+		var workingDays = moment().isoWeekdayCalc(startDate.toDate(), endDate.toDate(), [1,2,3,4,5]);
+		var days = endDate.diff(startDate, 'days');
+
+		if (days < 0) {
+			$('#days').html("Wrong interval captured");
+			$('#workingDays').html("Wrong interval captured");
+		} else {
+			$('#days').html(days + 1);
+			$('#workingDays').html(workingDays);
+		}
+
+	} 
+	
+    });
+    
+});
+</script>
+</head>
+
+<html>
+<body>
+
+<table>
+<tbody>
+  <tr>
+    <td width="50px">Start</td>
+    <td><input id="startDate" class="dateInput" type="text" /><br /></td>
+  </tr>
+    <tr>
+    <td width="50px">End</td>
+    <td><input id="endDate" class="dateInput" type="text" /><br /></td>
+  </tr>
+</tbody>
+</table>
+
+<div>
+<div>
+Number of days between start date and end date: <b id="days"></b>
+</div>
+<div>
+Number of working days between start date and end date: <b id="workingDays"></b>
+</div>
+</div>
+</body>
+</html>
+
+
+
+
+
